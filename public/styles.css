@@ -9,11 +9,44 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content:flex-start;
   height: 100vh;
 }
-
+header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+  
+  
+}
+nav a{
+  position: relative;
+  text-decoration: none;
+  margin-left: 10px;
+  margin-right: 10px;
+  color: white;
+}
+nav a::before{
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 10%;
+  background: #fff;
+  top: 100%;
+  transition: .5s;
+}
+nav a:hover::before{
+  width: 100%;
+}
+header .logo{
+  text-decoration: none;
+  font-size: large;
+  color: white;
+}
 .container {
   display: flex;
   justify-content: space-between;
