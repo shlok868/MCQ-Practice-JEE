@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Application</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="main-content">
+            <h1>Quiz Application</h1>
+            <div id="question-container">
+                <img id="question-image" src="" alt="Question">
+                <div id="options">
+                    <label><input type="radio" name="option" value="1"> 1</label>
+                    <label><input type="radio" name="option" value="2"> 2</label>
+                    <label><input type="radio" name="option" value="3"> 3</label>
+                    <label><input type="radio" name="option" value="4"> 4</label>
+                </div>
+            </div>
+            <div id="navigation">
+                <button id="prev-btn">Previous</button>
+                <button id="next-btn">Next</button>
+                <select id="question-select"></select>
+            </div>
+            <div id="status">
+                <div id="timer">Time Remaining: <span id="time">10:00</span></div> <!-- Add this line -->
+
+                <span id="question-status">Question 1/10</span>
+                <span id="answered-status">Answered: 0</span>
+            </div>
+            <button id="submit-btn">Submit</button>
+            <div id="result"></div>
+        </div>
+        <div id="side-panel">
+            <!-- Side panel for question navigation -->
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

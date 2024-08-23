@@ -1,0 +1,72 @@
+/* styles.css */
+.container {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+#side-panel {
+  width: 300px; /* Adjust width as needed */
+  padding: 5px; /* Reduced padding */
+  border-left: 1px solid #ccc;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr); /* 10 columns */
+  gap: 20px;
+}
+
+#main-content {
+  flex-grow: 1;
+  padding: 10px; /* Reduced padding */
+  padding-right: 300px;
+}
+
+.question-button {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  cursor: pointer;
+  background-color: white; /* Default color */
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.question-button.green {
+  background-color: green;
+}
+
+.question-button.red {
+  background-color: red;
+}
+
+#question-container{
+  padding: 20px;
+
+}
+#options{
+  margin: 20px;
+}
+
+#navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+button{
+  width: 100px;
+  height: 50px;
+}
+#status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+#question-image {
+  width: 150%;
+}

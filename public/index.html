@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folder Links</title>
+</head>
+<body>
+    <h1>Folders</h1>
+    <ul id="folderList"></ul>
+
+    <script>
+        fetch('/folders.json')
+            .then(response => response.json())
+            .then(folders => {
+                const folderList = document.getElementById('folderList');
+                folders.forEach(folder => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = `exam.html?folder=${folder}`;
+                    link.textContent = folder;
+                    listItem.appendChild(link);
+                    folderList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching folders:', error));
+    </script>
+</body>
+</html>
