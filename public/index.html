@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Folder Links</title>
+    <link rel="stylesheet" href="mainstyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Folders</h1>
-    <ul id="folderList"></ul>
-    asodnaisdn
+    <div class="container">
+        <h1>Question Bank</h1>
+        <p>Select a folder to start:</p><br><br>
+        <div id="folderList" class="folder-grid"></div>
+    </div>
 
     <script>
         fetch('/folders.json')
@@ -16,12 +20,11 @@
             .then(folders => {
                 const folderList = document.getElementById('folderList');
                 folders.forEach(folder => {
-                    const listItem = document.createElement('li');
-                    const link = document.createElement('a');
-                    link.href = `exam.html?folder=${folder}`;
-                    link.textContent = folder;
-                    listItem.appendChild(link);
-                    folderList.appendChild(listItem);
+                    const button = document.createElement('a');
+                    button.href = `exam.html?folder=${folder}`;
+                    button.textContent = folder;
+                    button.classList.add('folder-button');
+                    folderList.appendChild(button);
                 });
             })
             .catch(error => console.error('Error fetching folders:', error));
