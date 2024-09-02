@@ -47,6 +47,7 @@ const createRoutesForFolders = (baseFolder) => {
 // Create routes for each folder in the data directory
 createRoutesForFolders(dataFolder);
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+// Listen on all interfaces
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running at http://0.0.0.0:${port}`);
 });
