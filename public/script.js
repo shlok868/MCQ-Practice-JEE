@@ -8,7 +8,7 @@ let answers = [];
 let answerKey = {}; // Load this from your JSON file
 let submitted = false; // Track if the quiz has been submitted
 let timer; // Add this line
-let timeRemaining = 7200; // Add this line (time in seconds, e.g., 10 minutes)
+let timeRemaining = 10; // Add this line (time in seconds, e.g., 10 minutes)
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchQuestions();
