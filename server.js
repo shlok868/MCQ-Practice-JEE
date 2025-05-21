@@ -104,10 +104,10 @@ app.post('/clear-answers', (req, res) => {
 });
 // server/index.js or your main server file
 
-const pushToGitHub = require('./gitAutoPush');
+//const pushToGitHub = require('./gitAutoPush');
 
 // Push every 5 minutes (300,000 ms)
-setInterval(pushToGitHub, 300000);
+//setInterval(pushToGitHub, 300000);
 // Listen on all interfaces
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running at http://0.0.0.0:${port}`);
