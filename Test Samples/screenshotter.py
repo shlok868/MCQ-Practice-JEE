@@ -13,7 +13,6 @@ class SnippingTool:
         if not os.path.exists(self.folder_name):
             os.makedirs(self.folder_name)
         self.question_number = self.start_number
-        self.paused = False  # Track pause state
 
         self.root.deiconify()
         self.root.attributes("-alpha", 0.3)  # Make the window semi-transparent
@@ -23,38 +22,22 @@ class SnippingTool:
         self.canvas.bind("<ButtonPress-1>", self.on_button_press)
         self.canvas.bind("<B1-Motion>", self.on_mouse_drag)
         self.canvas.bind("<ButtonRelease-1>", self.on_button_release)
-        self.root.bind("p", self.toggle_pause)  # Bind 'p' key to pause/resume
-        self.root.bind("P", self.toggle_pause)
         self.rect = None
         self.start_x = None
         self.start_y = None
 
-    def toggle_pause(self, event=None):
-        if not self.paused:
-            self.paused = True
-            self.root.withdraw()
-            print("Snipping paused. Press 'P' to resume.")
-        else:
-            self.paused = False
-            self.root.deiconify()
-            print("Snipping resumed.")
-
     def on_button_press(self, event):
-        if self.paused:
-            return
         self.start_x = event.x
         self.start_y = event.y
         self.rect = self.canvas.create_rectangle(self.start_x, self.start_y, self.start_x, self.start_y, outline='red')
 
     def on_mouse_drag(self, event):
-        if self.paused or self.rect is None:
+        if self.rect is None:
             return
         cur_x, cur_y = (event.x, event.y)
         self.canvas.coords(self.rect, self.start_x, self.start_y, cur_x, cur_y)
 
     def on_button_release(self, event):
-        if self.paused:
-            return
         end_x, end_y = (event.x, event.y)
         self.root.withdraw()
         x1 = min(self.start_x, end_x)
