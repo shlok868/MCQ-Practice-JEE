@@ -15,19 +15,50 @@
     </div>
 
     <script>
-        fetch('/folders.json')
-            .then(response => response.json())
-            .then(folders => {
-                const folderList = document.getElementById('folderList');
-                folders.forEach(folder => {
-                    const button = document.createElement('a');
-                    button.href = `exam.html?folder=${folder}`;
-                    button.textContent = folder;
-                    button.classList.add('folder-button');
-                    folderList.appendChild(button);
-                });
-            })
-            .catch(error => console.error('Error fetching folders:', error));
+        let selectedFolder = null;
+
+        function showFolders() {
+            fetch('/folders.json')
+                .then(response => response.json())
+                .then(folders => {
+                    const folderList = document.getElementById('folderList');
+                    folderList.innerHTML = '';
+                    folders.forEach(folder => {
+                        const button = document.createElement('button');
+                        button.textContent = folder;
+                        button.classList.add('folder-button');
+                        button.onclick = () => showTests(folder);
+                        folderList.appendChild(button);
+                    });
+                })
+                .catch(error => console.error('Error fetching folders:', error));
+        }
+
+        function showTests(folder) {
+            selectedFolder = folder;
+            fetch(`/folders/${folder}/tests.json`)
+                .then(response => response.json())
+                .then(tests => {
+                    const folderList = document.getElementById('folderList');
+                    folderList.innerHTML = `<h2>${folder}</h2>`;
+                    tests.forEach(test => {
+                        const link = document.createElement('a');
+                        link.href = `exam.html?folder=${folder}/${test}`;
+                        link.textContent = test;
+                        link.classList.add('folder-button');
+                        folderList.appendChild(link);
+                    });
+                    // Add a back button
+                    const backBtn = document.createElement('button');
+                    backBtn.textContent = 'Back to Folders';
+                    backBtn.classList.add('folder-button');
+                    backBtn.onclick = showFolders;
+                    folderList.appendChild(backBtn);
+                })
+                .catch(error => console.error('Error fetching tests:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', showFolders);
     </script>
 </body>
 </html>

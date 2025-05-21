@@ -1,18 +1,25 @@
 const urlParams = new URLSearchParams(window.location.search);
 const folderName = urlParams.get('folder');
-let test=folderName;
+let test = folderName; // e.g., "chemistry/redox"
 let questionsFolder = `data/${test}/`;
 let totalQuestions = 0;
 let currentQuestion = 0;
 let answers = [];
-let answerKey = {}; // Load this from your JSON file
-let submitted = false; // Track if the quiz has been submitted
-let timer; // Add this line
-let timeRemaining = 10; // Add this line (time in seconds, e.g., 10 minutes)
+let answerKey = {}; // Loaded from ans.json
+let submitted = false;
+
+
+let customTimer = {
+    totalSeconds: 600,
+    remaining: 600,
+    interval: null,
+    running: false,
+    laps: []
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchQuestions();
-    startTimer();
+    
     document.getElementById('next-btn').addEventListener('click', () => {
         saveAnswer();
         if (currentQuestion < totalQuestions - 1) {
@@ -32,9 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('submit-btn').addEventListener('click', () => {
         saveAnswer();
         checkResults();
-        submitted = true; // Mark as submitted
+        submitted = true;
         updateSidePanel();
-        clearInterval(timer); // Update side panel to show incorrect answers
+        clearInterval(timer);
     });
 
     document.getElementById('question-select').addEventListener('change', (event) => {
@@ -42,13 +49,88 @@ document.addEventListener('DOMContentLoaded', () => {
         currentQuestion = parseInt(event.target.value);
         loadQuestion(currentQuestion);
     });
+
+    document.getElementById('save-btn').addEventListener('click', () => {
+        fetch('/save-answers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ testPath: test, answers })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert('Answers saved!');
+        });
+    });
+
+    document.getElementById('load-btn').addEventListener('click', () => {
+        fetch(`/load-answers?testPath=${encodeURIComponent(test)}`)
+            .then(res => res.json())
+            .then(saved => {
+                if (Array.isArray(saved) && saved.length === totalQuestions) {
+                    answers = saved;
+                    loadQuestion(currentQuestion);
+                    updateSidePanel();
+                    alert('Answers loaded!');
+                } else {
+                    alert('No saved answers found.');
+                }
+            });
+    });
+
+    document.getElementById('clear-btn').addEventListener('click', () => {
+        fetch('/clear-answers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ testPath: test, totalQuestions })
+        })
+        .then(res => res.json())
+        .then(data => {
+            answers = Array(totalQuestions).fill(null);
+            loadQuestion(currentQuestion);
+            updateSidePanel();
+            alert('Saved answers cleared!');
+        });
+    });
+
+    // Timer event listeners
+    document.getElementById('timer-set').addEventListener('click', setCustomTimer);
+    document.getElementById('timer-start').addEventListener('click', startCustomTimer);
+    document.getElementById('timer-pause').addEventListener('click', pauseCustomTimer);
+    document.getElementById('timer-stop').addEventListener('click', stopCustomTimer);
+    document.getElementById('timer-lap').addEventListener('click', lapCustomTimer);
 });
 
+// Make the timer window draggable
+(function() {
+    const timerWindow = document.getElementById('custom-timer-window');
+    const header = document.getElementById('custom-timer-header');
+    let offsetX = 0, offsetY = 0, isDown = false;
+
+    header.addEventListener('mousedown', function(e) {
+        isDown = true;
+        offsetX = e.clientX - timerWindow.offsetLeft;
+        offsetY = e.clientY - timerWindow.offsetTop;
+        document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!isDown) return;
+        timerWindow.style.left = (e.clientX - offsetX) + 'px';
+        timerWindow.style.top = (e.clientY - offsetY) + 'px';
+    });
+
+    document.addEventListener('mouseup', function() {
+        isDown = false;
+        document.body.style.userSelect = '';
+    });
+})();
+
 function fetchQuestions() {
-    fetch(`${test}.json`)
+    fetch(`data/${test}/ans.json`)
         .then(response => response.json())
         .then(data => {
-            totalQuestions = data.length;
+            answerKey = data;
+            totalQuestions = Object.keys(answerKey).length;
             answers = Array(totalQuestions).fill(null);
             populateQuestionSelect();
             populateSidePanel();
@@ -58,6 +140,7 @@ function fetchQuestions() {
 
 function populateQuestionSelect() {
     const questionSelect = document.getElementById('question-select');
+    questionSelect.innerHTML = '';
     for (let i = 0; i < totalQuestions; i++) {
         const option = document.createElement('option');
         option.value = i;
@@ -68,6 +151,7 @@ function populateQuestionSelect() {
 
 function populateSidePanel() {
     const sidePanel = document.getElementById('side-panel');
+    sidePanel.innerHTML = '';
     for (let i = 0; i < totalQuestions; i++) {
         const button = document.createElement('button');
         button.textContent = i + 1;
@@ -79,6 +163,7 @@ function populateSidePanel() {
         });
         sidePanel.appendChild(button);
     }
+    updateSidePanel();
 }
 
 function loadQuestion(index) {
@@ -95,9 +180,11 @@ function loadQuestion(index) {
         })
         .then(blob => {
             questionImage.src = URL.createObjectURL(blob);
+            questionImage.alt = '';
         })
         .catch(error => {
             console.error('Error loading image:', error);
+            questionImage.src = '';
             questionImage.alt = 'Image not found';
         });
 
@@ -149,24 +236,64 @@ function checkResults() {
         }
     });
     document.getElementById('result').textContent = `You scored ${score} out of ${totalQuestions}`;
-    updateSidePanel(); // Ensure the side panel is updated after checking results
+    updateSidePanel();
 }
 
-// Load the answer key from the JSON file
-fetch(`data/${test}ans.json`)
-    .then(response => response.json())
-    .then(data => {
-        answerKey = data;
-    });
-    function startTimer() {
-        timer = setInterval(() => {
-            timeRemaining--;
-            const minutes = Math.floor(timeRemaining / 60);
-            const seconds = timeRemaining % 60;
-            document.getElementById('time').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            //if (timeRemaining <= 0) {
-            //    clearInterval(timer);
-            //    document.getElementById('submit-btn').click(); // Automatically submit the quiz
-            //}
-        }, 1000);
+
+
+function updateTimerDisplay() {
+    const min = Math.floor(customTimer.remaining / 60);
+    const sec = customTimer.remaining % 60;
+    document.getElementById('timer-display').textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+}
+
+function setCustomTimer() {
+    const min = parseInt(document.getElementById('timer-minutes').value) || 0;
+    const sec = parseInt(document.getElementById('timer-seconds').value) || 0;
+    customTimer.totalSeconds = min * 60 + sec;
+    customTimer.remaining = customTimer.totalSeconds;
+    customTimer.laps = [];
+    document.getElementById('timer-laps').innerHTML = '';
+    updateTimerDisplay();
+}
+
+function startCustomTimer() {
+    if (customTimer.running) return;
+    customTimer.running = true;
+    customTimer.interval = setInterval(() => {
+        if (customTimer.remaining > 0) {
+            customTimer.remaining--;
+            updateTimerDisplay();
+        } else {
+            stopCustomTimer();
+        }
+    }, 1000);
+}
+
+function pauseCustomTimer() {
+    if (customTimer.running) {
+        clearInterval(customTimer.interval);
+        customTimer.running = false;
     }
+}
+
+function stopCustomTimer() {
+    clearInterval(customTimer.interval);
+    customTimer.running = false;
+    customTimer.remaining = customTimer.totalSeconds;
+    updateTimerDisplay();
+}
+
+function lapCustomTimer() {
+    const min = Math.floor(customTimer.remaining / 60);
+    const sec = customTimer.remaining % 60;
+    const lapTime = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    customTimer.laps.push(lapTime);
+    const lapList = document.getElementById('timer-laps');
+    const li = document.createElement('li');
+    li.textContent = `Lap ${customTimer.laps.length}: ${lapTime}`;
+    lapList.appendChild(li);
+}
+
+// Initialize display
+updateTimerDisplay();
