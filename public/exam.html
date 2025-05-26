@@ -2,77 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Application</title>
+    <title>MCQ Practice JEE</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="header">
-        <a href="#" class="logo">Exam View</a>
-
-        <nav class="navbar">
-            <a href="index.html" class="">Home</a>
-            
-
-        </nav>
-
-    </header>
-    <div class="container">
-                <!-- Add inside your exam.html, e.g. above #main-content -->
-        <!-- exam.html 
-<div id="custom-timer-window">
-    <div id="custom-timer-header">Timer</div>
-    <div id="custom-timer">
-        <div class="timer-inputs">
-            <input type="number" id="timer-minutes" min="0" value="10"> min
-            <input type="number" id="timer-seconds" min="0" max="59" value="0"> sec
-            <button id="timer-set">Set</button>
-        </div>
-        <div id="timer-display-container">
-            <span id="timer-display">10:00</span>
-        </div>
-        <div class="timer-buttons">
-            <button id="timer-start">Start</button>
-            <button id="timer-pause">Pause</button>
-            <button id="timer-stop">Stop</button>
-            <button id="timer-lap">Lap</button>
-        </div>
-        <ul id="timer-laps"></ul>
-    </div>
---></div>
-        <div id="main-content">
-            
-            <h1>Quiz Application</h1>
-            
-            <div id="question-container">
-                <img id="question-image" src="" alt="Question">
-                <div id="options">
-                    <label><input type="radio" name="option" value="1"> 1</label>
-                    <label><input type="radio" name="option" value="2"> 2</label>
-                    <label><input type="radio" name="option" value="3"> 3</label>
-                    <label><input type="radio" name="option" value="4"> 4</label>
-                </div>
+    <div id="container">
+        <aside id="side-panel"></aside>
+        <main id="main-content">
+            <header>
+                <h1>MCQ Practice JEE</h1>
+            </header>
+            <section id="question-section">
+                <img id="question-image" alt="Question Image" />
+                <form id="options-form">
+                    <label><input type="radio" name="option" value="1"> A</label>
+                    <label><input type="radio" name="option" value="2"> B</label>
+                    <label><input type="radio" name="option" value="3"> C</label>
+                    <label><input type="radio" name="option" value="4"> D</label>
+                </form>
+            </section>
+            <div id="status-bar">
+                <div id="question-status"></div>
+                <div id="answered-status"></div>
             </div>
-            <div id="navigation">
+            <div id="controls">
                 <button id="prev-btn">Previous</button>
-                <button id="next-btn">Next</button>
                 <select id="question-select"></select>
+                <button id="next-btn">Next</button>
             </div>
-            <div id="status">
-
-                <span id="question-status">Question 1/10</span>
-                <span id="answered-status">Answered: 0</span>
+            <div id="actions">
+                <button id="submit-btn">Submit</button>
+                <button id="save-btn">Save Answers</button>
+                <button id="load-btn">Load Answers</button>
+                <button id="clear-btn">Clear Saved</button>
             </div>
-            <button id="submit-btn">Submit</button>
-            <div class="answer-controls">
-    <button id="save-btn">Save</button>
-    <button id="load-btn">Load</button>
-    <button id="clear-btn">Clear</button>
-</div>
             <div id="result"></div>
-        </div>
-        <div id="side-panel">
-            <!-- Side panel for question navigation -->
+        </main>
+        <div id="custom-timer-window">
+            <div id="custom-timer-header">Timer</div>
+            <div id="timer-display">10:00</div>
+            <div id="timer-controls">
+                <input id="timer-minutes" type="number" min="0" max="99" placeholder="Min" style="width:40px;">
+                <input id="timer-seconds" type="number" min="0" max="59" placeholder="Sec" style="width:40px;">
+                <button id="timer-set">Set</button>
+                <button id="timer-start">Start</button>
+                <button id="timer-pause">Pause</button>
+                <button id="timer-stop">Stop</button>
+                <button id="timer-lap">Lap</button>
+            </div>
+            <ul id="timer-laps"></ul>
         </div>
     </div>
     <script src="script.js"></script>

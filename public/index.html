@@ -3,62 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Folder Links</title>
+    <title>ExamVault</title>
     <link rel="stylesheet" href="mainstyle.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Question Bank</h1>
-        <p>Select a folder to start:</p><br><br>
-        <div id="folderList" class="folder-grid"></div>
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-icon">🗂️</span>
+                <span class="brand-title">ExamVault</span>
+            </div>
+            <div class="topbar-actions">
+                <button id="back-to-folders-btn" style="display:none;">← Back to Folders</button>
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="profile-pic">
+            </div>
+        </header>
+        <div class="content">
+            <h1 class="main-title">My Exams</h1>
+            <div class="search-bar-row">
+                <input type="text" id="exam-search" placeholder="Search exams or folders..." />
+            </div>
+            <div class="section">
+                <h2>Subjects</h2>
+                <div id="subjects" class="folder-grid"></div>
+            </div>
+            <div class="section">
+                <h2>Other</h2>
+                <div id="other" class="folder-grid"></div>
+            </div>
+        </div>
     </div>
-
-    <script>
-        let selectedFolder = null;
-
-        function showFolders() {
-            fetch('/folders.json')
-                .then(response => response.json())
-                .then(folders => {
-                    const folderList = document.getElementById('folderList');
-                    folderList.innerHTML = '';
-                    folders.forEach(folder => {
-                        const button = document.createElement('button');
-                        button.textContent = folder;
-                        button.classList.add('folder-button');
-                        button.onclick = () => showTests(folder);
-                        folderList.appendChild(button);
-                    });
-                })
-                .catch(error => console.error('Error fetching folders:', error));
-        }
-
-        function showTests(folder) {
-            selectedFolder = folder;
-            fetch(`/folders/${folder}/tests.json`)
-                .then(response => response.json())
-                .then(tests => {
-                    const folderList = document.getElementById('folderList');
-                    folderList.innerHTML = `<h2>${folder}</h2>`;
-                    tests.forEach(test => {
-                        const link = document.createElement('a');
-                        link.href = `exam.html?folder=${folder}/${test}`;
-                        link.textContent = test;
-                        link.classList.add('folder-button');
-                        folderList.appendChild(link);
-                    });
-                    // Add a back button
-                    const backBtn = document.createElement('button');
-                    backBtn.textContent = 'Back to Folders';
-                    backBtn.classList.add('folder-button');
-                    backBtn.onclick = showFolders;
-                    folderList.appendChild(backBtn);
-                })
-                .catch(error => console.error('Error fetching tests:', error));
-        }
-
-        document.addEventListener('DOMContentLoaded', showFolders);
-    </script>
+    <script src="main.js"></script>
 </body>
 </html>

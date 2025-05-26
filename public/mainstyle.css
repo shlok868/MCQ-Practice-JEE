@@ -4,53 +4,190 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #2C3E50;
-    color: #ECF0F1;
+    background: #151c24;
+    color: #ecf0f1;
+}
+
+.main-wrapper {
+    min-height: 100vh;
+    width: 100vw;
+    background: #151c24;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1a2230;
+    padding: 18px 32px;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #fff;
+}
+
+.brand-icon {
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+.brand-title {
+    letter-spacing: 1px;
+}
+
+.search-container {
+    flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
 }
 
-.container {
-    text-align: center;
-    padding: 40px;
-    background-color: #34495E;
-    border-radius: 15px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    width: 80%;
-    max-width: 800px;
+#search-bar {
+    width: 340px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    background: #232b38;
+    color: #fff;
+    font-size: 1em;
+    outline: none;
 }
 
-h1 {
-    font-size: 2.5em;
-    margin-bottom: 40px;
-    color: #E74C3C;
+.profile {
+    margin-left: 24px;
 }
 
-.folder-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
+.profile-pic {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid #2c3e50;
 }
 
-.folder-button {
-    background-color: #3498DB;
-    color: #ECF0F1;
-    padding: 15px 20px;
-    text-decoration: none;
-    font-weight: 600;
+.content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 32px 0 32px; /* Increased side padding */
+}
+
+.main-title {
+    font-size: 2.2em;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: #fff;
+}
+
+.search-bar-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+#exam-search {
+    width: 60%;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    background: #232b38;
+    color: #fff;
+    font-size: 1.1em;
+    outline: none;
+}
+
+.section {
+    margin-bottom: 38px;
+}
+
+.section h2 {
     font-size: 1.2em;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    word-break: break-all;
+    font-weight: 600;
+    color: #b3b3b3;
+    margin-bottom: 18px;
+    margin-left: 8px;
 }
 
-.folder-button:hover {
-    background-color: #E74C3C;
-    transform: translateY(-3px);
+.folder-grid,
+.exam-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 28px;
+    justify-items: stretch;
+    align-items: stretch;
+    width: 100%;
+    margin: 0 auto;
+    min-width: 0;
+    /* max-width: 900px; <-- REMOVE THIS LINE */
+}
+
+.folder-card {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    box-sizing: border-box;
+    background: #232b38;
+    border-radius: 18px;
+    padding: 28px 18px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    border: 2px solid transparent;
+    min-height: 180px;
+}
+
+.folder-card:hover {
+    background: #283146;
+    transform: translateY(-4px) scale(1.03);
+    border: 2px solid #3498db;
+}
+
+.folder-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    object-fit: contain;
+}
+
+.folder-title {
+    font-size: 1.1em;
+    font-weight: 700; /* Bold */
+    color: #fff;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.folder-meta {
+    font-size: 0.98em;
+    color: #b3b3b3;
+    text-align: center;
+    margin-bottom: 2px;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+#back-to-folders-btn {
+    background: #232b38;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+#back-to-folders-btn:hover {
+    background: #3498db;
+    color: #fff;
 }
