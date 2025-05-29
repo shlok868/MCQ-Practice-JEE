@@ -112,3 +112,28 @@ app.post('/clear-answers', (req, res) => {
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running at http://0.0.0.0:${port}`);
 });
+
+app.get('/api/list', (req, res) => {
+    const relPath = req.query.path || '';
+    const absPath = path.join(dataFolder, relPath);
+
+    fs.readdir(absPath, { withFileTypes: true }, (err, items) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        const folders = [];
+        const exams = [];
+
+        items.forEach(item => {
+            if (item.isDirectory()) {
+                const ansPath = path.join(absPath, item.name, 'ans.json');
+                if (fs.existsSync(ansPath)) {
+                    exams.push(item.name);
+                } else {
+                    folders.push(item.name);
+                }
+            }
+        });
+
+        res.json({ folders, exams });
+    });
+});
