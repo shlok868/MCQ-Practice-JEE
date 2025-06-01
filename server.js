@@ -2,7 +2,6 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { exec } = require('child_process'); // Import exec
 
 const app = express();
 const port = 3000;
@@ -73,69 +72,13 @@ const createRoutesForFolders = (baseFolder) => {
 // Create routes for each folder in the data directory
 createRoutesForFolders(dataFolder);
 
-// --- Git Automation Function ---
-const autoCommitAndPush = (commitMessage, callback) => {
-    // Navigate to the root of your Git repository
-    // Assuming your server.js is at the root of your repo, or you can adjust this path
-    const gitRepoPath = __dirname; // Adjust if your .git folder is elsewhere
-
-    exec(`git -C ${gitRepoPath} add .`, (err, stdout, stderr) => {
-        if (err) {
-            console.error(`Git add error: ${stderr}`);
-            return callback(err);
-        }
-        console.log(`Git add stdout: ${stdout}`);
-
-        exec(`git -C ${gitRepoPath} commit -m "${commitMessage}"`, (err, stdout, stderr) => {
-            if (err) {
-                // If there's nothing to commit, it's not an error we want to fail on
-                if (stderr.includes('nothing to commit, working tree clean')) {
-                    console.log('No changes to commit.');
-                    return callback(null, 'No changes to commit.');
-                }
-                console.error(`Git commit error: ${stderr}`);
-                return callback(err);
-            }
-            console.log(`Git commit stdout: ${stdout}`);
-
-            exec(`git -C ${gitRepoPath} push origin main`, (err, stdout, stderr) => { // Assuming 'main' branch
-                if (err) {
-                    console.error(`Git push error: ${stderr}`);
-                    return callback(err);
-                }
-                console.log(`Git push stdout: ${stdout}`);
-                callback(null, 'Successfully committed and pushed to GitHub.');
-            });
-        });
-    });
-};
-// --- End Git Automation Function ---
-
-
 // Save answers
 app.post('/save-answers', (req, res) => {
     const { testPath, answers } = req.body;
     const savePath = path.join(dataFolder, testPath, 'saved_answers.json');
-
-    fs.writeFile(savePath, JSON.stringify(answers, null, 2), err => { // Added null, 2 for pretty printing JSON
-        if (err) {
-            console.error('Error saving answers:', err.message);
-            return res.status(500).json({ error: err.message });
-        }
-
-        console.log('Answers saved successfully.');
-
-        // Auto-commit and push after saving answers
-        const commitMessage = `Auto-save: Answers for ${testPath} updated`;
-        autoCommitAndPush(commitMessage, (gitErr, gitResult) => {
-            if (gitErr) {
-                console.error('Git automation failed:', gitErr);
-                // Even if Git fails, the answers were saved, so we might still report success for the save operation
-                return res.json({ success: true, gitStatus: 'failed', gitError: gitErr.message });
-            }
-            console.log('Git automation success:', gitResult);
-            res.json({ success: true, gitStatus: 'success', gitMessage: gitResult });
-        });
+    fs.writeFile(savePath, JSON.stringify(answers), err => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true });
     });
 });
 
@@ -154,27 +97,11 @@ app.post('/clear-answers', (req, res) => {
     const { testPath, totalQuestions } = req.body;
     const savePath = path.join(dataFolder, testPath, 'saved_answers.json');
     const blankAnswers = Array(totalQuestions).fill(null);
-    fs.writeFile(savePath, JSON.stringify(blankAnswers, null, 2), err => { // Added null, 2 for pretty printing JSON
-        if (err) {
-            console.error('Error clearing answers:', err.message);
-            return res.status(500).json({ error: err.message });
-        }
-
-        console.log('Answers cleared successfully.');
-
-        // Auto-commit and push after clearing answers
-        const commitMessage = `Auto-save: Answers for ${testPath} cleared`;
-        autoCommitAndPush(commitMessage, (gitErr, gitResult) => {
-            if (gitErr) {
-                console.error('Git automation failed:', gitErr);
-                return res.json({ success: true, gitStatus: 'failed', gitError: gitErr.message });
-            }
-            console.log('Git automation success:', gitResult);
-            res.json({ success: true, gitStatus: 'success', gitMessage: gitResult });
-        });
+    fs.writeFile(savePath, JSON.stringify(blankAnswers), err => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true });
     });
 });
-
 // server/index.js or your main server file
 
 // Listen on all interfaces
