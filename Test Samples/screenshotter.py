@@ -3,13 +3,14 @@ import os
 import tkinter as tk
 from tkinter import simpledialog
 from PIL import ImageGrab
-
+foldername="Electrostatics E1"
+#foldername = input("Enter the folder name to save screenshots: ")
 class SnippingTool:
     def __init__(self, root):
         self.root = root
         self.root.withdraw()
         self.start_number = int(simpledialog.askstring("Input", "Enter the starting question number:"))
-        self.folder_name = "screenshots"
+        self.folder_name = foldername
         if not os.path.exists(self.folder_name):
             os.makedirs(self.folder_name)
         self.question_number = self.start_number
