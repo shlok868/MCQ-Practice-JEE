@@ -1,0 +1,13 @@
+{
+  "name": "mcq-practice-jee",
+  "version": "1.0.0",
+  "description": "A simple Express server for managing data.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "body-parser": "^1.20.2"
+  }
+}
